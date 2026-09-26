@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexo</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <a href="#">
+            <div class="logo"><img src="assets/logo-black.png" alt="logo-nexo"><h3>Nexo</h3></div>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#">Resumo</a></li>
+                    <li><a href="#">Transações</a></li>
+                    <li><a href="#">Contas</a></li>
+                    <li><a href="#">Investimentos</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="main-area">
+            <header class="topbar">
+                <button class="add-receita" aria-label="Add Receita">+Receita</button>
+                <button class="add-despesa" aria-label="Add Despesa">+Despesa</button>
+                <button class="menu-config" aria-label="Toggle Menu">☰</button>
+            </header>
+
+            <main class="content">
+                <section class="resumo">
+                    <div class="card">
+                        <span>Recebido</span>
+                        <h3 id="valor-recebido">R$ 0,00</h3>
+                    </div>
+                    <div class="card">
+                        <span>Despesas</span>
+                        <h3 id="valor-despesas">R$ 0,00</h3>
+                    </div>
+                    <div class="card">
+                        <span>Saldo</span>
+                        <h3 id="valor-saldo">R$ 0,00</h3>
+                    </div>
+                </section>
+
+                <section class="overview">
+                    <div class="card">
+                        <h2>Histórico/Projeção de Transações</h2>
+                        
+                    </div>
+
+                    <div class="card">
+                        <h2>Contas e Cartões</h2>
+                    </div>
+                </section>
+
+                <section class="transacoes">
+                    <div class="card">
+                        <div class="transacoes-header">
+                            <h2>Transações Recentes</h2>
+                            <a href="#">Ver tudo ➜</a>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nome</th>
+                                    <th scope="col">Categoria</th>
+                                    <th scope="col">Data</th>
+                                    <th scope="col">Pagamento</th>
+                                    <th scope="col">Classificação</th>
+                                    <th scope="col">Conta</th>
+                                    <th scope="col">Valor</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Logitech G515 TKL</td>
+                                    <td>Compra</td>
+                                    <td>19/09/2026</td>
+                                    <td>Crédito</td>
+                                    <td>Necessidade</td>
+                                    <td>Nubank</td>
+                                    <td>R$ 675,00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+        
+    </div>
+</body>
+</html>
