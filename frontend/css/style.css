@@ -17,7 +17,9 @@ body {
     flex: 1;
     min-width: 0;
 }
-
+/* =========================
+   RESUMO
+========================= */
 .resumo {
     display: flex;
     gap: 1.50rem;
@@ -50,6 +52,10 @@ body {
 .content {
     padding: 30px;
 }
+
+/* =========================
+   SIDEBAR
+========================= */
 
 .sidebar {
     padding: 0px 20px 5px 0px;
@@ -104,21 +110,23 @@ body {
 }
 button {
     height: 30px;
-    background: #fff;
-    border: 2px solid #edf0f5;
-    border-radius: 5px;
-    box-shadow: 0 2px 8px rgba(30, 55, 90, 0.082);
-    font-size: 15px;
+    background: transparent;
+    border: 1px solid #f4f5f7;
+    box-shadow: 0 2px 8px rgba(30, 55, 90, 0.144);
     font-weight: 600;
-    color: #7c858f;
+    border-radius: 8px;
+    color: #6b7280;
+    font-size: 1rem;
+    transition: background 0.2s, color 0.2s;
 }
 button:hover {
-    background: #f5f6f8ef;
-    border-color: #dfe3e7;
+    background: #f1f3f7ef;
     color: #20242a;
     cursor:pointer;
 }
-
+/* =========================
+   OVERVIEW
+========================= */
 .overview {
     display: grid;
     grid-template-columns: 2fr 1fr;
@@ -126,6 +134,9 @@ button:hover {
     margin-top: 0;   
 }
 
+/* =========================
+   TRANSAÇÕES
+========================= */
 .transacoes-header {
     display: flex;
     flex-direction: row;
@@ -135,17 +146,18 @@ button:hover {
 
 .transacoes-header a {
     text-decoration: none;
-    background: #edf0f5;
-    border: 2px solid #dfe3e7;
-    border-radius: 8px;
+    background: transparent;
+    border: 1px solid #f4f5f7;
+    border-radius: 7px;
     color: #20242a;
     font-weight: 500;
-    padding: 3px;
+    padding: 4px;
+    box-shadow: 0 2px 8px rgba(30, 55, 90, 0.144);
+    transition: background 0.2s, color 0.2s;
 }
 .transacoes-header a:hover {
-    background: #f4f5f8;
-    border: 2px solid #e7eaee;
-    text-shadow: 0 0 0.6px currentColor;
+    background: #f3f4f6;
+    color: #111827;
 }
 
 table {
@@ -162,4 +174,189 @@ th:last-child, td:last-child {
 
 tbody tr:hover {
     background: #f8f9fa;
+}
+/* =========================
+   MODAL
+========================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal {
+    width: min(90%, 520px);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #1f2937;
+    font-size: 1.4rem;
+}
+
+.close-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #6b7280;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.close-modal:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modal label {
+    margin-top: 8px;
+    color: #374151;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* =========================
+   INPUTS / SELECTS
+========================= */
+
+.modal input,
+.modal select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    color: #111827;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modal input::placeholder {
+    color: #9ca3af;
+}
+
+.modal input:focus,
+.modal select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.modal input.invalido:focus,
+.modal select.invalido:focus {
+    border-color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
+}
+
+/* =========================
+   AÇÕES
+========================= */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.form-actions button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.form-actions button[type="button"] {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.form-actions button[type="button"]:hover {
+    background: #eaecf0;
+}
+
+.form-actions button[type="submit"] {
+    background: #a163f1;
+    color: #fff;
+}
+
+.form-actions button[type="submit"]:hover {
+    background: #703bb4cc;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.erro-campo {
+    display: block;
+    color: #c0392b;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+.invalido {
+    border-color: #c0392b;
+}
+
+td.receita {
+    color: #28d166;
+    font-weight: 600;
+}
+
+td.despesa {
+    color: #c91f1f;
+    font-weight: 600;
+}
+
+
+.hidden {
+    display: none;
 }
