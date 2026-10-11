@@ -49,9 +49,9 @@ e integração entre as partes.
 ## Próximas etapas
 
 - [x] Finalizar estrutura inicial do dashboard
-- [ ] Criar formulário de receitas e despesas
-- [ ] Implementar lógica das transações
-- [ ] Persistência inicial com localStorage
+- [x] Criar formulário de receitas e despesas
+- [x] Implementar lógica das transações
+- [x] Persistência inicial com localStorage
 - [ ] Criar backend com Spring Boot
 - [ ] Integrar banco de dados
 - [ ] Integrar frontend e backend
