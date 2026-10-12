@@ -360,3 +360,35 @@ td.despesa {
 .hidden {
     display: none;
 }
+
+/* =========================
+   RESUMO
+========================= */
+
+.card-recebido {
+    border-color: #28d16638;
+    box-shadow: 0 0 0 3px rgba(43, 192, 88, 0.062);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card-despesa {
+    border-color: #c91f1f38;
+    box-shadow: 0 0 0 3px rgba(201, 31, 31, 0.062);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card-saldo {
+    border-color: #a163f138;
+    box-shadow: 0 0 0 3px rgba(161, 99, 241, 0.062);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.card-recebido:hover {
+    border-color: #28d1667e;
+    box-shadow: 0 0 0 3px rgba(43, 192, 88, 0.226);
+}
+.card-despesa:hover {
+    border-color: #cc2e2e65;
+    box-shadow: 0 0 0 3px rgba(201, 31, 31, 0.178);
+}
+.card-saldo:hover {
+    border-color: rgba(138, 82, 211, 0.356);
+    box-shadow: 0 0 0 3px rgba(161, 99, 241, 0.178);
+}

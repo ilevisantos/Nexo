@@ -16,6 +16,9 @@ const campoData = document.getElementById("data");
 let tipoTransacao = "";
 const transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 const listaTransacoes = document.getElementById("lista-transacoes");
+const valorRecebido = document.getElementById("valor-recebido");
+const valorDespesas = document.getElementById("valor-despesas");
+const valorSaldo = document.getElementById("valor-saldo");
 
 // botoes para abrir e fechar o modal
 addReceita.addEventListener("click", () => {
@@ -69,8 +72,12 @@ const formatadorMoeda = new Intl.NumberFormat("pt-BR", {
 
 function renderizarTransacoes() {
     listaTransacoes.innerHTML = "";
+    
+    transacoesOrdenadas = transacoes.toSorted((a, b) => {
+        return b.data.localeCompare(a.data);
+    });
 
-    transacoes.forEach((transacao) => {
+    transacoesOrdenadas.forEach((transacao) => {
         const linha = document.createElement("tr");
 
         const celulaNome = document.createElement("td");
@@ -109,6 +116,28 @@ function renderizarTransacoes() {
 
         listaTransacoes.appendChild(linha);
     })
+}
+
+function atualizarResumo() {
+    const receitas = transacoes.reduce((acumulador, transacao) => {
+        if (transacao.tipo === "receita") {
+            return acumulador + transacao.valor;
+        }
+        return acumulador;
+    }, 0);
+
+    const despesas = transacoes.reduce((acumulador, transacao) => {
+        if (transacao.tipo === "despesa") {
+            return acumulador + transacao.valor;
+        }
+        return acumulador;
+    }, 0);
+
+    const saldo = receitas - despesas;
+
+    valorRecebido.textContent = formatadorMoeda.format(receitas);
+    valorDespesas.textContent = formatadorMoeda.format(despesas);
+    valorSaldo.textContent = formatadorMoeda.format(saldo);
 }
 
 // limpar os erros quando o usuario digitar algo nos campos do formulario
@@ -180,9 +209,19 @@ formTransacao.addEventListener("submit", (enviar) => {
     transacoes.push(transacao);
     localStorage.setItem("transacoes", JSON.stringify(transacoes));
     renderizarTransacoes();
+    atualizarResumo();
 
     formTransacao.reset();
     modalOverlay.classList.add("hidden");
 });
 
 renderizarTransacoes();
+atualizarResumo();
+
+/* RESETAR OS DADOS DE TESTE
+
+transacoes.length = 0;
+localStorage.setItem("transacoes", JSON.stringify(transacoes));
+renderizarTransacoes(); 
+
+*/
