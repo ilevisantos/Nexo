@@ -392,3 +392,127 @@ td.despesa {
     border-color: rgba(138, 82, 211, 0.356);
     box-shadow: 0 0 0 3px rgba(161, 99, 241, 0.178);
 }
+
+/* =========================
+   CHECKBOX
+========================= */
+
+.coluna-selecao {
+    width: 40px;
+    padding-left: 2px;
+    padding-right: 2px;
+    text-align: center;
+}
+.checkbox-transacao {
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+    accent-color: #7c3aed;
+}
+
+/* =========================
+   BARRA DE AÇÕES
+========================= */
+
+.area-acoes {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.25s ease;
+}
+
+.area-acoes.ativa {
+    grid-template-rows: 1fr;
+}
+
+.barra-acoes {
+    min-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+
+    border: 1px solid #f2f4f7;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 8px rgba(30, 55, 90, 0.144);
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0.2s ease;
+}
+
+.conteudo-acoes {
+    padding: 10px 14px;
+}
+
+.area-acoes.ativa .barra-acoes {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.conteudo-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 14px;
+}
+
+.botoes-acoes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.botoes-acoes button {
+    padding: 7px 12px;
+    font-size: 0.85rem;
+    font-weight: 550;
+    border-radius: 8px;
+}
+
+.btn-excluir {
+    background-color: #c91f1f;
+    color: #f0e7e7;
+}
+.btn-excluir:hover {
+    background-color: #a91b1b;
+    color: #fff;
+}
+.botoes-acoes button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* MODAL EXCLUSAO */
+.modal-confirmacao {
+    width: min(90%, 420px);
+    padding: 24px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.modal-confirmacao h2 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+}
+
+.modal-confirmacao p {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.acoes-confirmacao {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+.acoes-confirmacao button {
+    padding: 6px 14px;
+    font-size: 0.9rem;
+    font-weight: 550;
+    border-radius: 8px;
+}

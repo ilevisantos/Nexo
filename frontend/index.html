@@ -63,9 +63,27 @@
                             <h2>Transações Recentes</h2>
                             <a href="#">Ver tudo ➜</a>
                         </div>
+                        <div class="area-acoes" id="area-acoes">
+                            <div class="barra-acoes" id="barra-acoes">
+                                <div class="conteudo-acoes">
+                                    <span id="transacoes-selecionadas">0 transações selecionadas</span>
+
+                                    <div class="botoes-acoes">
+                                        <button type="button" id="btn-editar" disabled>
+                                            Editar
+                                        </button>
+
+                                        <button type="button" id="btn-excluir" class="btn-excluir">
+                                            Excluir
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <table>
                             <thead>
                                 <tr>
+                                    <th class="coluna-selecao"></th>
                                     <th scope="col">Nome</th>
                                     <th scope="col">Categoria</th>
                                     <th scope="col">Data</th>
@@ -170,6 +188,27 @@
                         <button type="submit" class="save-modal">Salvar</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay hidden" id="modal-exclusao">
+        <div class="modal-confirmacao">
+            <h2>Excluir transações?</h2>
+
+            <p id="mensagem-exclusao">
+                Tem certeza que deseja excluir as transações selecionadas?
+                Esta ação não poderá ser desfeita.
+            </p>
+
+            <div class="acoes-confirmacao">
+                <button type="button" id="cancelar-exclusao">
+                    Cancelar
+                </button>
+
+                <button type="button" id="confirmar-exclusao" class="btn-excluir">
+                    Sim, excluir
+                </button>
             </div>
         </div>
     </div>
