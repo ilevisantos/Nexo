@@ -76,17 +76,48 @@ body {
 }
 .sidebar a {
     display: block;
-    padding: 4px;
+    position: relative;
+    padding: 10px 6px;
+    border-radius: 8px;
     text-decoration: none;
     color: #20242a;
     font-weight: 500;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
 }
-
 .sidebar a:hover {
     background: #ffffff;
-    border-color: #edf0f5;
     color: #14161a;
-    text-shadow: 0 0 0.6px currentColor;
+}
+.sidebar a.ativo {
+    background: #fcf9ff;
+    color: #14161a;
+    font-weight: 600;
+}
+.sidebar a::before {
+    content: "";
+    position: absolute;
+
+    left: 0;
+    top: 20%;
+
+    width: 3px;
+    height: 60%;
+
+    background: #6366f1;
+    border-radius: 0 4px 4px 0;
+
+    opacity: 0;
+    transform: translateY(3px);
+
+    transition:
+        opacity 0.40s ease,
+        transform 0.40s ease;
+}
+.sidebar a.ativo::before {
+    opacity: 1;
+    transform: translateY(0);
 }
 .sidebar img {
     width: 4rem;
@@ -484,8 +515,149 @@ td.despesa {
     opacity: 0.4;
     cursor: not-allowed;
 }
+/* =========================
+   AREA DE PESQUISA
+========================= */
 
-/* MODAL EXCLUSAO */
+.area-pesquisa {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+/* Estilo compartilhado dos campos */
+.area-pesquisa input,
+.area-pesquisa select {
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 11px 14px;
+    background: #f8fafc;
+    border: 1px solid #e7e2f0;
+    border-radius: 8px;
+    color: #20242a;
+    font: inherit;
+    font-size: 14px;
+    outline: none;
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/* Campo de pesquisa */
+#pesquisa-transacoes {
+    flex: 1 1 280px;
+    width: 100%;
+    min-width: 180px;
+}
+
+/* Filtros */
+#filtro-tipo {
+    flex: 0 0 120px;
+    width: 120px;
+}
+
+#filtro-categoria {
+    flex: 0 0 180px;
+    width: 180px;
+}
+
+/* Datas */
+.filtro-data {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 0 0 auto;
+}
+
+.filtro-data input {
+    width: 145px;
+}
+
+/* Botão limpar */
+#limpar-filtros {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Placeholder */
+.area-pesquisa input::placeholder {
+    color: #a594b8;
+}
+
+/* Hover */
+.area-pesquisa input:hover,
+.area-pesquisa select:hover {
+    border-color: #cbd5e1;
+}
+
+/* Foco */
+.area-pesquisa input:focus,
+.area-pesquisa select:focus {
+    background: #ffffff;
+    border-color: #b581f8;
+    box-shadow: 0 0 0 3px rgba(195, 129, 248, 0.12);
+}
+
+/* Nenhum resultado */
+.mensagem-sem-resultados {
+    padding: 36px 16px;
+    text-align: center;
+    color: #a894b8;
+    font-size: 14px;
+    font-weight: 400;
+}
+/* =========================
+   PAGINAÇÃO
+========================= */
+
+.paginacao {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    gap: 12px;
+}
+
+#info-paginacao {
+    color: #64748b;
+    font-size: 13px;
+}
+
+.botoes-paginacao {
+    display: flex;
+    gap: 8px;
+}
+
+.botoes-paginacao button {
+    padding: 4px 14px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #20242a;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.botoes-paginacao button:hover:not(:disabled) {
+    background: #faf8fc;
+    border-color: #d5cbe1;
+}
+
+.botoes-paginacao button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* =========================
+   MODAL EXCLUSAO
+========================= */
 .modal-confirmacao {
     width: min(90%, 420px);
     padding: 24px;
@@ -515,4 +687,15 @@ td.despesa {
     font-size: 0.9rem;
     font-weight: 550;
     border-radius: 8px;
+}
+
+/* =========================
+   PAGINAS PRINCIPAIS
+========================= */
+.pagina {
+    display: none;
+}
+
+.pagina.ativa {
+    display: block;
 }
