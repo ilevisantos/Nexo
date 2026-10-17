@@ -16,6 +16,7 @@ const campoData = document.getElementById("data");
 let tipoTransacao = "";
 const transacoes = JSON.parse(localStorage.getItem("transacoes")) || [];
 const listaTransacoes = document.getElementById("lista-transacoes");
+const listaTransacoesCompleta = document.getElementById("lista-transacoes-completa");
 const valorRecebido = document.getElementById("valor-recebido");
 const valorDespesas = document.getElementById("valor-despesas");
 const valorSaldo = document.getElementById("valor-saldo");
@@ -24,12 +25,29 @@ const areaAcoes = document.getElementById("area-acoes");
 const quantidadeSelecionadas = document.getElementById("transacoes-selecionadas");
 const botaoEditar = document.getElementById("btn-editar");
 const botaoExcluir = document.getElementById("btn-excluir");
+const areaAcoesCompleta = document.getElementById("area-acoes-completa");
+const quantidadeSelecionadasCompleta = document.getElementById("transacoes-selecionadas-completa");
+const botaoEditarCompleta = document.getElementById("btn-editar-completa");
+const botaoExcluirCompleta = document.getElementById("btn-excluir-completa");
 const modalExclusao = document.getElementById("modal-exclusao");
 const mensagemExclusao = document.getElementById("mensagem-exclusao");
 const botaoCancelarExclusao = document.getElementById("cancelar-exclusao");
 const botaoConfirmarExclusao = document.getElementById("confirmar-exclusao");
 let transacaoEmEdicao = null;
 const botaoSalvarTransacao = formTransacao.querySelector('button[type="submit"]');
+const linksNavegacao = document.querySelectorAll("[data-pagina]");
+const paginas = document.querySelectorAll(".pagina")
+const campoPesquisa = document.getElementById("pesquisa-transacoes");
+const filtroTipo = document.getElementById("filtro-tipo");
+const filtroCategoria = document.getElementById("filtro-categoria");
+const filtroDataInicial = document.getElementById("data-inicial");
+const filtroDataFinal = document.getElementById("data-final");
+const botaoLimparFiltros = document.getElementById("limpar-filtros");
+let paginaAtual = 1;
+const transacoesPorPagina = 8;
+const infoPaginacao = document.getElementById("info-paginacao");
+const botaoPaginaAnterior = document.getElementById("pagina-anterior");
+const botaoProximaPagina = document.getElementById("proxima-pagina");
 
 // botoes para abrir e fechar o modal
 addReceita.addEventListener("click", () => {
@@ -87,14 +105,68 @@ const formatadorMoeda = new Intl.NumberFormat("pt-BR", {
     currency: "BRL"
 });
 
-function renderizarTransacoes() {
-    listaTransacoes.innerHTML = "";
+function renderizarTransacoes(tabelaDestino, limite=null, pesquisa="", tipo="todos", categoria="todas", dataInicial="", dataFinal="") {
+    tabelaDestino.innerHTML = "";
     
     transacoesOrdenadas = transacoes.toSorted((a, b) => {
         return b.data.localeCompare(a.data);
     });
+    const transacoesFiltradas = transacoesOrdenadas.filter((transacao) => {
+        const correspondePesquisa = transacao.nome
+            .toLowerCase()
+            .includes(pesquisa.toLowerCase());
 
-    transacoesOrdenadas.forEach((transacao) => {
+        const correspondeTipo = tipo === "todos" || transacao.tipo === tipo;
+        const correspondeCategoria = categoria === "todas" || transacao.categoria === categoria;
+        const correspondeDataInicial = !dataInicial || transacao.data >= dataInicial;
+        const correspondeDataFinal = !dataFinal || transacao.data <= dataFinal;
+
+        return correspondePesquisa && correspondeTipo && correspondeCategoria && correspondeDataInicial && correspondeDataFinal;;
+    });
+
+    let transacoesExibidas;
+
+    if (tabelaDestino === listaTransacoesCompleta) {
+        const totalPaginas = Math.max(
+            1,
+            Math.ceil(transacoesFiltradas.length / transacoesPorPagina)
+        );
+
+        // Impede que a página atual ultrapasse a última disponível
+        paginaAtual = Math.min(paginaAtual, totalPaginas);
+
+        const inicio = (paginaAtual - 1) * transacoesPorPagina;
+        const fim = inicio + transacoesPorPagina;
+
+        transacoesExibidas = transacoesFiltradas.slice(inicio, fim);
+
+        // Atualiza os controles
+        infoPaginacao.textContent = `Página ${paginaAtual} de ${totalPaginas}`;
+
+        botaoPaginaAnterior.disabled = paginaAtual === 1;
+        botaoProximaPagina.disabled = paginaAtual === totalPaginas;
+
+    } else {
+        transacoesExibidas = limite === null
+            ? transacoesFiltradas
+            : transacoesFiltradas.slice(0, limite);
+    }
+
+    if (transacoesExibidas.length === 0) {
+        const linha = document.createElement("tr");
+        const celula = document.createElement("td");
+
+        celula.colSpan = 8;
+        celula.textContent = "Nenhuma transação encontrada.";
+        celula.classList.add("mensagem-sem-resultados");
+
+        linha.appendChild(celula);
+        tabelaDestino.appendChild(linha);
+
+        return;
+    }
+
+    transacoesExibidas.forEach((transacao) => {
         const linha = document.createElement("tr");
         
         const celulaSelecao = document.createElement("td");
@@ -156,7 +228,7 @@ function renderizarTransacoes() {
 
 
 
-        listaTransacoes.appendChild(linha);
+        tabelaDestino.appendChild(linha);
     })
 }
 
@@ -184,12 +256,20 @@ function atualizarResumo() {
 
 function atualizarBarraAcoes() {
     const quantidade = transacoesSelecionadas.length;
+
+    const texto = `${quantidade} ${quantidade === 1
+        ? "transação selecionada"
+        : "transações selecionadas"}`;
+
+    // Barra do Resumo
+    quantidadeSelecionadas.textContent = texto;
+    areaAcoes.classList.toggle("ativa", quantidade > 0);
     botaoEditar.disabled = quantidade !== 1;
 
-    quantidadeSelecionadas.textContent =
-        `${quantidade} ${quantidade === 1 ? "transação selecionada" : "transações selecionadas"}`;
-
-    areaAcoes.classList.toggle("ativa", quantidade > 0);
+    // Barra da página Transações
+    quantidadeSelecionadasCompleta.textContent = texto;
+    areaAcoesCompleta.classList.toggle("ativa", quantidade > 0);
+    botaoEditarCompleta.disabled = quantidade !== 1;
 }
 
 function preencherFormulario(transacao) {
@@ -209,6 +289,112 @@ function fecharModalTransacao() {
     transacaoEmEdicao = null;
 }
 
+function navegarPara(paginaDestino) {
+    const paginaSelecionada = document.getElementById(
+        `pagina-${paginaDestino}`
+    );
+
+    if (!paginaSelecionada) return;
+
+    paginas.forEach((pagina) => {
+        pagina.classList.remove("ativa");
+    });
+
+    paginaSelecionada.classList.add("ativa");
+
+    linksNavegacao.forEach((link) => {
+        const linkAtivo = link.dataset.pagina === paginaDestino;
+
+        link.classList.toggle("ativo", linkAtivo);
+    });
+}
+
+function atualizarTabelaCompleta() {
+    const pesquisa = campoPesquisa.value.trim().toLowerCase();
+    const tipo = filtroTipo.value;
+    const categoria = filtroCategoria.value;
+    const dataInicial = filtroDataInicial.value;
+    const dataFinal = filtroDataFinal.value;
+
+    renderizarTransacoes(listaTransacoesCompleta, null, pesquisa, tipo, categoria, dataInicial, dataFinal);
+}
+
+function atualizarCategorias() {
+    const categoriaAtual = filtroCategoria.value;
+
+    const categorias = [...new Set(
+        transacoes.map((transacao) => transacao.categoria)
+    )].sort();
+
+    filtroCategoria.innerHTML = '<option value="todas">Todas as categorias</option>';
+
+    categorias.forEach((categoria) => {
+        const option = document.createElement("option");
+
+        option.value = categoria;
+        option.textContent = categoria;
+
+        filtroCategoria.appendChild(option);
+    });
+
+    filtroCategoria.value = categorias.includes(categoriaAtual)
+        ? categoriaAtual
+        : "todas";
+}
+
+function aplicarFiltros() {
+    paginaAtual = 1;
+    atualizarTabelaCompleta();
+}
+
+// eventos links de navegação
+linksNavegacao.forEach((link) => {
+    link.addEventListener("click", (event) => {
+        event.preventDefault();
+
+        const paginaDestino = link.dataset.pagina;
+
+        navegarPara(paginaDestino);
+    });
+});
+
+// evento campo de pesquisa
+campoPesquisa.addEventListener("input", aplicarFiltros); 
+filtroTipo.addEventListener("change", aplicarFiltros);
+filtroCategoria.addEventListener("change", aplicarFiltros);
+filtroDataInicial.addEventListener("change", aplicarFiltros);
+filtroDataFinal.addEventListener("change", aplicarFiltros);
+
+botaoLimparFiltros.addEventListener("click", () => {
+    campoPesquisa.value = "";
+    filtroTipo.value = "todos";
+    filtroCategoria.value = "todas";
+
+    filtroDataInicial.value = "";
+    filtroDataFinal.value = "";
+    paginaAtual = 1;
+
+    atualizarTabelaCompleta();
+});
+
+botaoPaginaAnterior.addEventListener("click", () => {
+    if (paginaAtual <= 1) return;
+
+    paginaAtual--;
+    transacoesSelecionadas = [];
+    atualizarBarraAcoes();
+    atualizarTabelaCompleta();
+});
+
+botaoProximaPagina.addEventListener("click", () => {
+    if (botaoProximaPagina.disabled) return;
+
+    paginaAtual++;
+    transacoesSelecionadas = [];
+    atualizarBarraAcoes();
+    atualizarTabelaCompleta();
+});
+
 // limpar os erros quando o usuario digitar algo nos campos do formulario
 const camposFormulario = [
     campoNome,
@@ -223,15 +409,17 @@ camposFormulario.forEach((campo) => {
         limparErroCampo(campo);
     });
 });
-botaoExcluir.addEventListener("click", () => {
-    const quantidade = transacoesSelecionadas.length;
+[botaoExcluir, botaoExcluirCompleta].forEach((botao) => { 
+    botao.addEventListener("click", () => {
+        const quantidade = transacoesSelecionadas.length;
 
-    if (quantidade === 0) return;
+        if (quantidade === 0) return;
 
-    mensagemExclusao.textContent =
-        `Deseja realmente excluir ${quantidade} ${quantidade === 1 ? "transação" : "transações"}? Esta ação não poderá ser desfeita.`;
+        mensagemExclusao.textContent =
+            `Deseja realmente excluir ${quantidade} ${quantidade === 1 ? "transação" : "transações"}? Esta ação não poderá ser desfeita.`;
 
-    modalExclusao.classList.remove("hidden");
+        modalExclusao.classList.remove("hidden");
+    });
 });
 
 botaoCancelarExclusao.addEventListener("click", () => {
@@ -249,43 +437,46 @@ const transacoesRestantes = transacoes.filter((transacao) => {
 
     transacoesSelecionadas = [];
 
-    renderizarTransacoes();
+    renderizarTransacoes(listaTransacoes, 5);
+    atualizarCategorias();
+    atualizarTabelaCompleta();
     atualizarResumo();
     atualizarBarraAcoes();
 
     modalExclusao.classList.add("hidden");
 });
+[botaoEditar, botaoEditarCompleta].forEach((botao) => {
+    botao.addEventListener("click", () => {
+        if (transacoesSelecionadas.length !== 1) return;
 
-botaoEditar.addEventListener("click", () => {
-    if (transacoesSelecionadas.length !== 1) return;
+        const id = transacoesSelecionadas[0];
 
-    const id = transacoesSelecionadas[0];
+        const transacao = transacoes.find((transacao) => {
+            return transacao.id === id;
+        });
 
-    const transacao = transacoes.find((transacao) => {
-        return transacao.id === id;
-    });
+        if (!transacao) return;
 
-    if (!transacao) return;
+        transacaoEmEdicao = transacao.id;
+        tipoTransacao = transacao.tipo;
 
-    transacaoEmEdicao = transacao.id;
-    tipoTransacao = transacao.tipo;
+        preencherFormulario(transacao);
 
-    preencherFormulario(transacao);
+        modalTitle.textContent =
+            transacao.tipo === "receita" ? "Editar Receita" : "Editar Despesa";
 
-    modalTitle.textContent =
-        transacao.tipo === "receita" ? "Editar Receita" : "Editar Despesa";
+        botaoSalvarTransacao.textContent = "Salvar Alterações";
 
-    botaoSalvarTransacao.textContent = "Salvar Alterações";
+        if (transacao.tipo === "receita") {
+            campoClassificacao.classList.add("hidden");
+            campoPagamento.classList.add("hidden");
+        } else {
+            campoClassificacao.classList.remove("hidden");
+            campoPagamento.classList.remove("hidden");
+        }
 
-    if (transacao.tipo === "receita") {
-        campoClassificacao.classList.add("hidden");
-        campoPagamento.classList.add("hidden");
-    } else {
-        campoClassificacao.classList.remove("hidden");
-        campoPagamento.classList.remove("hidden");
-    }
-
-    modalOverlay.classList.remove("hidden");
+        modalOverlay.classList.remove("hidden");
+        });
     });
 
 // fechar o modal de exclusao ao clicar fora dele ou botao esc
@@ -373,14 +564,19 @@ formTransacao.addEventListener("submit", (enviar) => {
     
     localStorage.setItem("transacoes", JSON.stringify(transacoes));
     transacoesSelecionadas = []
-    renderizarTransacoes();
+    renderizarTransacoes(listaTransacoes, 5);
+    atualizarCategorias();
+    atualizarTabelaCompleta();
     atualizarResumo();
     atualizarBarraAcoes();
 
     fecharModalTransacao();
 });
 
-renderizarTransacoes();
+navegarPara("resumo");
+renderizarTransacoes(listaTransacoes, 5);
+atualizarCategorias();
+atualizarTabelaCompleta();
 atualizarResumo();
 atualizarBarraAcoes();
 
@@ -388,7 +584,8 @@ atualizarBarraAcoes();
 
 transacoes.length = 0;
 localStorage.setItem("transacoes", JSON.stringify(transacoes));
-renderizarTransacoes(); 
+renderizarTransacoes(listaTransacoes, 5);
+atualizarTabelaCompleta();
 
 */
 
